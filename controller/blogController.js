@@ -3,10 +3,11 @@ const Blog = require("../model/blogSchema");
 //add blog
 const addBlog = async (req, res, next) => {
   try {
-    const { title, description } = req.body;
+    const { title, description, category } = req.body;
     const addBlog = new Blog({
       title,
       description,
+      category,
     });
     const result = await addBlog.save();
     res.send({
@@ -19,6 +20,20 @@ const addBlog = async (req, res, next) => {
       success: false,
       message: err.message,
     });
+  }
+};
+
+//get all blogs
+const getAllBlogs = async (req, res, next) => {
+  try {
+    const result = await Blog.find({});
+
+    res.send({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    console.log(error.message);
   }
 };
 
@@ -67,7 +82,7 @@ const updateBlog = async (req, res, next) => {
 const deleteBlog = async (req, res, next) => {
   const id = req.params.id;
   try {
-      const result = await Blog.deleteOne({ _id: id });
+    const result = await Blog.deleteOne({ _id: id });
     if (result.deletedCount) {
       res.send({
         success: true,
@@ -89,6 +104,7 @@ const deleteBlog = async (req, res, next) => {
 
 module.exports = {
   addBlog,
+  getAllBlogs,
   getUpdateBlog,
   updateBlog,
   deleteBlog,
